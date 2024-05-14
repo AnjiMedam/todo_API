@@ -1,0 +1,26 @@
+Title: Create a Simple To-Do List RESTful API in Python
+
+Objective: Develop a RESTful API for a basic to-do list application using FastAPI. The API should allow clients to create, read, update, and delete to-do items.
+
+Requirements:
+
+    Set up the development environment:
+        Install Python 3.8 or higher
+        Install FastAPI
+        Install SqlAlchemy
+        Install FastAPI-JWT-Auth
+
+    Design the data models:
+        User model: id, username, email, password, role
+        Task model: id, title, description, due_date, status, user_id (foreign key)
+
+    Create the API endpoints with appropriate authentication and authorization:
+        User registration and login
+        CRUD operations for users (accessible by admins only)
+        CRUD operations for tasks (accessible by task owner and admins)
+
+    Implement authentication using JWT:
+        Secure API endpoints using JWT tokens
+        Implement token refreshing functionality
+
+    Write unit tests for the API endpoints to ensure correct functionality.
