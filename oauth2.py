@@ -18,3 +18,8 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],db: Ses
         headers={"WWW-Authenticate": "Bearer"},
     )
     return verify_token(token,credentials_exception,db)
+
+
+
+
+

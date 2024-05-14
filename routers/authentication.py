@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from typing import List
+
+from jose import JWTError,jwt
+from loguru import logger
 import database
 import models
 from sqlalchemy.orm import Session
@@ -14,37 +17,39 @@ router = APIRouter(
 )
 
 get_db = database.get_db
-
+ 
 @router.post("/login/",status_code=status.HTTP_201_CREATED)
 def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
-    
+    logger.info("form data is %s",form_data)
     print(form_data)
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
-    print("user----------------->",user.username)
     
     if not user:
-        print(" i am  not user")
+        logger.warning("Incorrect credential AT username not matching..!")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Incorrect credentials")
 
     if not Hash.verify_password(form_data.password,user.password):
-        print(" i am in verfy passwod")
+        logger.warning("Incorrect password...")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Incorrect Password")
-    
+     
+    access_token = JWTtoken.create_access_token(data={"sub": user.username})
+    refresh_token = JWTtoken.create_refresh_token(data={"sub": user.username})
 
-    access_token = JWTtoken.create_access_token(
-        data={"sub": user.username})
-    
-    # here username or admin is anji
-    # credentials_exception = HTTPException(
-    #     status_code=status.HTTP_401_UNAUTHORIZED,
-    #     detail="Could not validate credentials",
-    #     headers={"WWW-Authenticate": "Bearer"},
-    # )
-    # c_user= JWTtoken.verify_token(access_token,credentials_exception,db)
-    # if(c_user == user.username):
-    #     print("user from token and admin user both were same...")
+    print("printing access_token which is generated: ", access_token)
+    print("printing refresh_token which is generated: ", refresh_token)
+    return schemas.Token(access_token=access_token,refresh_token=refresh_token, token_type="bearer")
 
-    print("print access_token generated: ", access_token)
-    return schemas.Token(access_token=access_token, token_type="bearer")
+@router.post("/refresh/")
+def refresh_access_token(refresh_token: str, db: Session = Depends(get_db)):
+    try:
+        payload = jwt.decode(refresh_token, JWTtoken.SECRET_KEY, algorithms=[JWTtoken.ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
 
+        access_token = JWTtoken.create_access_token(data={"sub": username})
+
+        return {"access_token": access_token, "token_type": "bearer"}
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")        

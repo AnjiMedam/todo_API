@@ -1,3 +1,15 @@
 May 14, 2024 > 16:28:30 |  INFO  Getting info of users...
 May 14, 2024 > 17:54:10 |  INFO  Getting info of users...
 May 14, 2024 > 18:16:47 |  WARNING  Username was already present..
+May 14, 2024 > 19:01:08 |  INFO  Request method: PATCH - /update_user/2  endpoint is called by id:2
+May 14, 2024 > 19:01:28 |  INFO  Request method: PATCH - /update_user/2  endpoint is called by id:2
+May 14, 2024 > 20:29:37 |  INFO  form data is %s
+May 14, 2024 > 20:29:38 |  INFO  access token of username is %s: 
+May 14, 2024 > 20:29:38 |  INFO  refresh_token of username is %s: 
+May 14, 2024 > 20:31:50 |  INFO  form data is %s
+May 14, 2024 > 20:31:56 |  INFO  form data is %s
+May 14, 2024 > 20:32:18 |  INFO  form data is %s
+May 14, 2024 > 20:32:25 |  INFO  form data is %s
+May 14, 2024 > 20:32:26 |  INFO  form data is %s
+May 14, 2024 > 20:32:35 |  INFO  form data is %s
+May 14, 2024 > 20:34:06 |  INFO  form data is %s
