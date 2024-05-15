@@ -1,5 +1,5 @@
 import traceback
-from fastapi import HTTPException,status
+from fastapi import HTTPException, Request,status
 from loguru import logger
 import models
 import schemas
@@ -19,21 +19,21 @@ def create(request: schemas.User, db: Session):
     db.refresh(db_user)
     # if Hash.verify_password(request.password,db_user.password):
     #     print("yes, plain and hashed both are same ...")
-
-    print(db_user.password,"------------------------------------>")
+   
     return db_user
 
-def get_one(id:int,db:Session):
+def get_one(id:int,db:Session,req):
     user_exits= db.query(models.User).filter(models.User.id == id).first()
     if not user_exits :
-        logger.error(f"user was not found at {id}")
+        logger.error(f"at {req.method} of API endpoint /get_user/id--user was not found at {id}")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present at {id}')
     return user_exits
 
 
-def get_all(db: Session):
+def get_all(db: Session,req):
     all_users = db.query(models.User).all()
     if not all_users :
+        logger.info(f'at {req.method} of API endpoint /get_users--no user present')
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
     return all_users
 
@@ -71,9 +71,10 @@ def partiallyupdate(userid,request,request1,current_user,db):
         logger.error(f"An error occurred while partially updating user with id {userid}: {str(e)}  -  - {traceback.format_exc()}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error occurred")
 
-def delete_one(id:int,db:Session):
+def delete_one(id:int,db:Session,req):
     single_user = db.query(models.User).filter(models.User.id == id,models.User.is_delete==False).first()
     if not single_user :
+        logger.error(f'at {req.method} of API endpoint /delete_user/id- No user present at id: {id} to delete..')
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
     single_user.is_delete = True
     db.commit()

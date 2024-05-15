@@ -20,19 +20,19 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
 
 
 @router.get("/get_user/{id}",status_code=status.HTTP_200_OK,response_model=schemas.ShowUser)
-def get_user(current_user: Annotated[schemas.User, Depends(get_current_user)],id:int ,db: Session = Depends(get_db)):
+def get_user(req:Request,current_user: Annotated[schemas.User, Depends(get_current_user)],id:int ,db: Session = Depends(get_db)):
     
     if current_user.role == "admin":
-        return user.get_one(id,db)
+        return user.get_one(id,db,req)
     else:
         raise HTTPException(status_code=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION, detail= {"msg":"Only admins are able to authorize"})
     
 
 @router.get("/get_users",status_code=status.HTTP_200_OK,response_model=List[schemas.ShowUserWithId])
-def get_users(current_user: Annotated[schemas.User, Depends(get_current_user)], db: Session = Depends(get_db)):
+def get_users(req:Request,current_user: Annotated[schemas.User, Depends(get_current_user)], db: Session = Depends(get_db)):
 
     if current_user.role == "admin":
-        return user.get_all(db)
+        return user.get_all(db,req)
     else:
         raise HTTPException(status_code=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,detail="Only admins are able to authorize")
 
@@ -53,10 +53,10 @@ def update_user(request:Request,current_user: Annotated[schemas.User, Depends(ge
 
 
 @router.delete("/delete_user/{id}",status_code=status.HTTP_200_OK)
-def delete_user(current_user: Annotated[schemas.User, Depends(get_current_user)],id:int,db:Session= Depends(get_db)):
+def delete_user(req:Request,current_user: Annotated[schemas.User, Depends(get_current_user)],id:int,db:Session= Depends(get_db)):
 
     if current_user.role == "admin":
-        return user.delete_one(id,db)
+        return user.delete_one(id,db,req)
     else:
         raise HTTPException(status_code=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION, detail= {"msg":"Only admins are able to authorize"})
     
@@ -69,4 +69,5 @@ def deleted_user(current_user: Annotated[schemas.User, Depends(get_current_user)
     else:
         return user.deleted_all_users(current_user,db)
     
-        
+
+
