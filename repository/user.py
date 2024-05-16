@@ -23,6 +23,7 @@ def create(request: schemas.User, db: Session):
     return db_user
 
 def get_one(id:int,db:Session,req):
+
     user_exits= db.query(models.User).filter(models.User.id == id).first()
     if not user_exits :
         logger.error(f"at {req.method} of API endpoint /get_user/id--user was not found at {id}")
@@ -37,19 +38,9 @@ def get_all(db: Session,req):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
     return all_users
 
-
 def get_info(id:int,db:Session):
     userinfo= db.query(models.User).filter(models.User.id == id).first()
     return [userinfo] if userinfo else []
-
-
-# def get_all_not_deleted(db:Session):
-#     all_users = db.query(models.User).filter(models.User.is_delete==False).all()
-#     print(all_users,"---------------< al users")
-#     if not all_users :
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
-#     return all_users
-
 
 def partiallyupdate(userid,request,request1,current_user,db):
     try:
@@ -82,7 +73,7 @@ def delete_one(id:int,db:Session,req):
     return {'msg': f'User deleted at {id} Successfully'}
 
 
-def deleted_all_users(current_user,db):
+def deleted_all_users(db):
     d_users = db.query(models.User).filter(models.User.is_delete==True).all()
     if not d_users:
         logger.error("no deleted data was found")

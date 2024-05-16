@@ -6,7 +6,7 @@ import schemas
 import database
 from repository import task
 from oauth2 import get_current_user
-
+from . import basic_auth
 router = APIRouter(
     prefix="/task",
     tags=['Tasks']
@@ -46,9 +46,7 @@ def get_cuser_tasks(current_user: Annotated[schemas.User, Depends(get_current_us
 
 @router.put("/update_task/{taskid}",status_code=status.HTTP_201_CREATED,response_model=schemas.TaskBase)
 def update_task(current_user: Annotated[schemas.User, Depends(get_current_user)],taskid:int,request:schemas.TaskBase,db:Session = Depends(get_db)):
-    
     return task.update_one(taskid,request,db,current_user)
-
 
 @router.delete("/delete_task/{taskid}",status_code=status.HTTP_200_OK)
 def delete_task(current_user: Annotated[schemas.User, Depends(get_current_user)],taskid:int,db:Session = Depends(get_db)):

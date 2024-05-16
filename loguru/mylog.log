@@ -17,3 +17,14 @@ May 15, 2024 > 13:30:23 |  WARNING  Incorrect credential AT username not matchin
 May 15, 2024 > 20:26:27 |  INFO  Request method: POST - /login API endpoint called by user: id:reddy
 May 15, 2024 > 20:37:15 |  INFO  Request method: POST - /login API endpoint called by user:reddy
 May 15, 2024 > 20:43:40 |  ERROR  at DELETE--no user present at id: 4 to delete..
+May 16, 2024 > 12:38:15 |  INFO  Request method: POST - /login API endpoint called by user:reddy
+May 16, 2024 > 12:39:17 |  INFO  Request method: POST - /login API endpoint called by user:reddy
+May 16, 2024 > 12:39:33 |  INFO  Request method: POST - /login/refresh/ -API endpoint called 
+May 16, 2024 > 12:40:09 |  INFO  Request method: POST - /login/refresh/ -API endpoint called 
+May 16, 2024 > 12:40:20 |  INFO  Request method: POST - /login API endpoint called by user:reddy
+May 16, 2024 > 12:40:38 |  INFO  Request method: POST - /login/refresh/ -API endpoint called 
+May 16, 2024 > 12:40:38 |  INFO  {'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWRkeSIsImV4cCI6MTcxNTg0NDMzOH0.cWyvV8F5qcyY1JUBzUBt1t5FChNw4mFZh-WokrSv9Xo', 'username': 'reddy', 'token_type': 'bearer'}
+May 16, 2024 > 16:20:16 |  INFO  Request method: POST - /login API endpoint called by user:anji
+May 16, 2024 > 16:21:43 |  ERROR  No task found for id at 1
+May 16, 2024 > 16:21:48 |  ERROR  No task found for id at 1
+May 16, 2024 > 20:00:42 |  INFO  Request method: POST - /login API endpoint called by user:vijay

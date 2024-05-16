@@ -18,7 +18,7 @@ def get_one(id:int,db: Session):
     single_task = db.query(models.Task).join(models.User).filter(models.Task.id == id , models.User.is_delete == False).first()
     if not single_task :
         logger.error(f"No task found for id at {id}")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO task Present')
     return single_task
 
 
@@ -26,7 +26,7 @@ def get_all(db: Session):
     all_tasks = db.query(models.Task).join(models.User).filter(models.User.is_delete == False).all()
     print("alltasks --------------> ",all_tasks)
     if not all_tasks :
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO task Present to show tasks')
     return all_tasks
 
 
