@@ -32,12 +32,17 @@ def get_one(id:int,db:Session,req):
 
 
 def get_all(db: Session,req):
-    all_users = db.query(models.User).all()
-    if not all_users :
-        logger.info(f'at {req.method} of API endpoint /get_users--no user present')
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
-    return all_users
-
+    try:
+        all_users = db.query(models.User).all()
+        print(all_users,"<--------------------------")
+        if not all_users :
+            logger.info(f'at {req.method} of API endpoint /get_users--no user present')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO User Present')
+        return all_users
+    except Exception as e:
+        logger.error(f'Unexpected error at {req.method} of API endpoint /get_users: {e}')
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='An unexpected error occurred')
+    
 def get_info(id:int,db:Session):
     userinfo= db.query(models.User).filter(models.User.id == id).first()
     return [userinfo] if userinfo else []

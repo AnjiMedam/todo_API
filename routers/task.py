@@ -1,5 +1,6 @@
 from typing import List,Annotated
 from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi.security import HTTPBasicCredentials
 import schemas, database, models
 from sqlalchemy.orm import Session
 import schemas
@@ -52,4 +53,27 @@ def update_task(current_user: Annotated[schemas.User, Depends(get_current_user)]
 def delete_task(current_user: Annotated[schemas.User, Depends(get_current_user)],taskid:int,db:Session = Depends(get_db)):
 
     return task.delete_one(taskid,db,current_user)
+
+###################################################################################################
+
+@router.get("/basic_auth/get_cuser_tasks/",status_code=status.HTTP_200_OK,response_model=schemas.ShowUser)
+def get_cuser_tasks(current_user:Annotated[HTTPBasicCredentials, Depends(basic_auth.get_current_username)],db:Session = Depends(get_db)):
+    if current_user.role in ('admin','regular'):
+        return current_user
+    else:
+        raise HTTPException(status_code=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION, detail= {"msg":"Only admins are able to authorize"})
+
+@router.get("/basic_auth/get_tasks/",status_code=status.HTTP_200_OK,response_model=List[schemas.ShowTask])
+def get_tasks(current_user:Annotated[HTTPBasicCredentials, Depends(basic_auth.get_current_username)],db: Session = Depends(get_db)):
+    if current_user.role == "admin":
+        return task.get_all(db)
+    else:
+        raise HTTPException(status_code=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION, detail= {"msg":"Only admins are able to authorize"})
+
+
+
+
+
+
+
 

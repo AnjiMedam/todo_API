@@ -23,12 +23,15 @@ def get_one(id:int,db: Session):
 
 
 def get_all(db: Session):
-    all_tasks = db.query(models.Task).join(models.User).filter(models.User.is_delete == False).all()
-    print("alltasks --------------> ",all_tasks)
-    if not all_tasks :
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO task Present to show tasks')
-    return all_tasks
-
+    try:
+        all_tasks = db.query(models.Task).join(models.User).filter(models.User.is_delete == False).all()
+        print("alltasks --------------> ",all_tasks)
+        if not all_tasks :
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO task Present to show tasks')
+        return all_tasks
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='An unexpected error occurred')
 
 def update_one(task_id, request, db, current_user):
 

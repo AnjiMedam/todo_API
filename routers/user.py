@@ -71,20 +71,23 @@ def deleted_user(current_user: Annotated[schemas.User, Depends(get_current_user)
     else:
         return user.deleted_all_users(db)
 #############################################################################################    
-@router.get('/basic_auth/{id}',response_model=schemas.ShowUserwithDeleteFlag)
+@router.get('/basic_auth/get_user/{id}',response_model=schemas.ShowUser)
 def getting_user(req:Request,current_user:Annotated[HTTPBasicCredentials, Depends(get_current_username)],id:int,db: Session = Depends(get_db)):
     print(f'at id:{id}------------->',current_user.is_delete)
-    if current_user.is_delete == False:
+    if current_user.role == "admin":
         return user.get_one(id,db,req)
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'deleted user at id: {id}')
     
+@router.get("/basic_auth/get_users", status_code=status.HTTP_200_OK, response_model=List[schemas.ShowUserWithId])
+def get_users(req: Request, current_user: HTTPBasicCredentials = Depends(get_current_username), db: Session = Depends(get_db)):
+    if current_user.role == 'admin':
+        return user.get_all(db, req)
+    else:    
+        raise HTTPException(status_code=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION, detail="Only admins are able to authorize")
 
-@router.get('/basic_auth/deleted_users',response_model=List[schemas.ShowUserwithDeleteFlag])
-def getting_deleted_users(req:Request,current_user:Annotated[HTTPBasicCredentials, Depends(get_current_username)],db: Session = Depends(get_db)):
-    if current_user.role== 'admin':
-        return user.deleted_all_users(db)
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'NO deleted user Present')
+
+
+
 
 
